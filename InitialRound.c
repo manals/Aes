@@ -15,9 +15,10 @@ int main(){
 **if convert is needed. 
 */
 
-//Each letter is 1 byte, text should be <= 16 byte (128 bit). TextNofBits%128 =0
+//Each letter is 1 byte, text should be <= 16 byte (128 bit). TextNofBits%128 =0 ?
+//What if user entered less than 128 bits?
 
-printf("Plain Text:  ");
+printf("Enter Plain Text:  ");
 scanf("%s",state);
 
  
@@ -28,14 +29,13 @@ scanf("%s",state);
 for(i=0;i<4;i++){
   for(j=0;j<4;j++){
  printf("%hhX.",state[i][j]);
-//Q: Why 2,2 is 40 and 2,1 is 05
+//Q: Why 2,2 is 40 and 2,1 is 05 if nothing was entered!
 }
 printf("\n");
 }
 
 printf("\n KEY IN HEX \n");
   
-//PRINT IN HEX
   
 for(i=0;i<4;i++){
   for(j=0;j<4;j++){
