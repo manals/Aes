@@ -175,7 +175,7 @@ void mixcolumn()
 	            	for(j=0;j<4;j++)
 		temp[i][j]=0x00;
 
-	          unsigned  char tem;
+	          unsigned  char tem=0x00;
 
 		for(j=0;j<4;j++)
 		{
