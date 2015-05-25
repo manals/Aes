@@ -5,9 +5,11 @@
 #include <string.h>
 
  int i,j,k;
- unsigned char state[4][4];
+
+ unsigned char state[4][4] = {{0x32,0x88,0x31,0xE0},{0x43,0x5A,0x31,0x37},{0xF6,0x30,0x98,0x07},{0x98,0x8D,0xA2,0x34}};
+
  unsigned char temp[4][4];
- unsigned char key[4][4]={{'f','x','r','w'},{'3','5','d','s'},{'g','h','c','s'},{'w','q','s','l'}};
+ unsigned char key[4][4]={{0x2B,0x28,0xAB,0x09},{0x7E,0xAE,0xF7,0xCF},{0x15,0xD2,0x15,0x4F},{0x16,0xA6,0x88,0x3C}};
  unsigned char expan_key[4][44];
  char tmp;
 
@@ -176,6 +178,7 @@ void mixcolumn()
 	            	for(j=0;j<4;j++)
 		temp[i][j]=0x00;
 
+	          unsigned  char tem;
 
 		for(j=0;j<4;j++)
 		{
@@ -184,9 +187,30 @@ void mixcolumn()
 		{
 			for(k=0;k<4;k++)
 			{
-	    temp[j][i] ^=state[k][j] * coumn[i][k];
-	   // printf("%#x",coumn[i][k]);
+				if(coumn[j][k]==0x01)
+             tem =state[k][i] ;
+				if(coumn[j][k]==0x02)
+				{
+					if (state[k][i]&0x80)
+				             tem =(state[k][i]<<1)^0x1b ;
+					else
+						tem =(state[k][i]<<1);
+				}
+				if(coumn[j][k]==0x03)
+				{
+					if (state[k][i]&0x80)
+				             tem =((state[k][i]<<1)^state[k][i])^0x1b ;
+					else
+						tem =((state[k][i]<<1)^state[k][i]);
+				}
+
+	    temp[j][i] = temp[j][i]^(tem);
+        printf("%#X  %#X ",state[k][i],coumn[j][k]);
+        printf("%#X ",tem);
+        printf("\t");
 			}
+
+         printf("%#X \n",temp[j][i]);
 		}
 		}
 
@@ -197,8 +221,6 @@ void mixcolumn()
 int main ()
 {
 
-//	 unsigned char plain[4][4] = {{0x45,0x88,0x99,0x98},{0x65,0x33,0xAA,0x76},{0xBE,0x2C,0xEE,0x9F},{0x23,0x17,0xCD,0xDD}};
-
 
 
 
@@ -208,16 +230,26 @@ int main ()
 //Each letter is 1 byte, text should be <= 16 byte (128 bit). TextNofBits%128 =0 ?
 //What if user entered less than 128 bits?
 
-printf("Enter Plain Text:  ");
+/*printf("Enter Plain Text:  ");
 scanf("%s",*state);
 
 //State length condition (16 letters only)
  printf("\n TEXT IN HEX \n");
 
 //PRINT IN HEX
-
+ unsigned char state1[4][4]={{0x00, 0x00, 0x00, 0x00},
+			{0x00, 0x00, 0x00, 0x00},
+			{0x00, 0x00, 0x00, 0x00},
+			{0x00, 0x00, 0x00, 0x00}};
+ for(i=0;i<4;i++){
+   for(j=0;j<4;j++){
+ 	  state1[i][j]=state[i][j];
+   }
+ }
+*/
 for(i=0;i<4;i++){
   for(j=0;j<4;j++){
+	//  state[i][j]=state1[j][i];
  printf("%#X",state[i][j]);
  printf("\t");
 
@@ -226,7 +258,7 @@ printf("\n");
 }
 
 printf("\n KEY IN HEX \n");
-//
+
 
 for(i=0;i<4;i++){
   for(j=0;j<4;j++){
@@ -311,12 +343,12 @@ for(j=0;j<4;j++)
 		{
 		for (i=0;i<4;i++)
 			{
+			state[j][i]=temp[j][i];
 	    printf("%#X",temp[j][i]);
 	    printf("\t");
 			}
 		printf("\n");
-		}
-state[4][4]=temp[4][4];
+		};
 
 
 //=================3.d. Add round key ================
