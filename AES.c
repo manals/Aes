@@ -6,7 +6,7 @@
 
  int i,j,k;
 
- unsigned char state[4][4] = {{0x32,0x88,0x31,0xE0},{0x43,0x5A,0x31,0x37},{0xF6,0x30,0x98,0x07},{0x98,0x8D,0xA2,0x34}};
+ unsigned char state[4][4] = {{0x32,0x88,0x31,0xE0},{0x43,0x5A,0x31,0x37},{0xF6,0x30,0x98,0x07},{0xa8,0x8D,0xA2,0x34}};
 
  unsigned char temp[4][4];
  unsigned char key[4][4]={{0x2B,0x28,0xAB,0x09},{0x7E,0xAE,0xF7,0xCF},{0x15,0xD2,0x15,0x4F},{0x16,0xA6,0x88,0x3C}};
@@ -176,7 +176,7 @@ void mixcolumn()
 		temp[i][j]=0x00;
 
 	          unsigned  char tem=0x00;
-
+	          // unsigned char tem1=0x00;
 		for(j=0;j<4;j++)
 		{
 
@@ -189,7 +189,10 @@ void mixcolumn()
 				if(coumn[j][k]==0x02)
 				{
 					if (state[k][i]&0x80)
+					{
+					//	printf("%#X jj ",state[k][i]);
 				             tem =(state[k][i]<<1)^0x1b ;
+					}
 					else
 						tem =(state[k][i]<<1);
 				}
@@ -200,14 +203,14 @@ void mixcolumn()
 					else
 						tem =((state[k][i]<<1)^state[k][i]);
 				}
-
+    //   tem1 ^=(state[k][i]*coumn[j][k])%(0x11B);
 	    temp[j][i] = temp[j][i]^(tem);
-        printf("%#X  %#X ",state[k][i],coumn[j][k]);
-        printf("%#X ",tem);
-        printf("\t");
+     //   printf("%#X  %#X ",state[k][i],coumn[j][k]);
+       // printf("%#X  ",tem);
+       // printf("\t");
 			}
 
-         printf("%#X \n",temp[j][i]);
+         //printf("%#X  %#X\n",temp[j][i]);
 		}
 		}
 
@@ -290,9 +293,48 @@ printf("\n");
 }
 printf("\n");
 
-
+int start=4;
+int loop;
 //=================3. n round ================
 
+for(loop=1;loop<11;loop++)
+{
+	printf("\n State %d \n",loop);
+	for(i=0;i<4;i++){
+	  for(j=0;j<4;j++){
+		//  state[i][j]=state1[j][i];
+	 printf("%#X",state[i][j]);
+	 printf("\t");
+
+	}
+	printf("\n");
+	}
+
+
+	char temp_key[4][4];
+
+
+	for(i=0;i<4;i++)
+	{
+		for(j=0;j<4;j++)
+		{
+			temp_key[j][i]=expan_key[j][loop*start+i];
+		}
+
+	}
+
+
+	printf("\n key %d \n",loop);
+
+
+	for(i=0;i<4;i++){
+	  for(j=0;j<4;j++){
+	 printf("%#X",temp_key[i][j]);
+	 printf("\t");
+	}
+   printf("\n");
+	}
+	printf("\n");
 //=================3.a. SubByte ================
 
 for(i=0;i<4;i++){
@@ -332,6 +374,8 @@ printf("\n");
 
 
 //=================3.c. mix Column Correct ================
+if(loop!=10)
+{
 mixcolumn();
 
 printf("\n AFTER MIX COLUMN \n");
@@ -346,6 +390,7 @@ for(j=0;j<4;j++)
 			}
 		printf("\n");
 		};
+}
 
 
 //=================3.d. Add round key ================
@@ -353,10 +398,12 @@ for(j=0;j<4;j++)
 
 for(i=0;i<4;i++){
   for(j=0;j<4;j++){
-state[i][j]= state[i][j] ^ key[i][j];
+state[i][j]= state[i][j] ^ temp_key[i][j];
 }
 }
-printf("\n AFTER ADDING ROUND KEY 1\n");
+
+
+printf("\n AFTER ADDING ROUND KEY %d\n",loop);
 
 for(i=0;i<4;i++){
   for(j=0;j<4;j++){
@@ -366,7 +413,13 @@ for(i=0;i<4;i++){
 printf("\n");
 }
 printf("\n");
+
+
+
+
+}
 	return 0;
-	}
 
 
+
+}
