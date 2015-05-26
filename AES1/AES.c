@@ -5,7 +5,7 @@
 #include <string.h>
 #include "AES.h"
 
-int i,j,k;
+
 
 
 
@@ -14,6 +14,8 @@ int i,j,k;
 
 void Add_key(unsigned char state[4][4], unsigned char temp_key[4][4])
 {
+	int i,j,k;
+
   for(i = 0; i < 4; i++) {
     for(j = 0; j < 4; j++) {
       state[i][j] = state[i][j] ^ temp_key[i][j];
@@ -23,7 +25,7 @@ void Add_key(unsigned char state[4][4], unsigned char temp_key[4][4])
 
 void key_generate(unsigned char key[4][4], unsigned char expan_key[4][44])
 {
-
+	int i,j,k;
   int rloop = 0;
   printf("\n RCON \n");
   for(i = 0; i < 44; i++)
@@ -86,7 +88,7 @@ void key_generate(unsigned char key[4][4], unsigned char expan_key[4][44])
 
 void subByte(unsigned char state[4][4])
 {
-
+	int i,j,k;
   for(i=0;i<4;i++){
     for(j=0;j<4;j++){
 
@@ -100,6 +102,8 @@ void subByte(unsigned char state[4][4])
 
 void shiftRaw(unsigned char state[4][4])
 {
+	int i,j,k;
+
   char tmp;
   tmp=state[1][3] ;
   state[1][3]=state[1][0];
@@ -126,6 +130,7 @@ void mixcolumn(unsigned char state[4][4], unsigned char temp[4][4])
 {
 
 
+	int i,j,k;
 
   unsigned char coumn[4][4]={{0x02, 0x03, 0x01, 0x01},
     {0x01, 0x02, 0x03, 0x01},
@@ -180,6 +185,7 @@ void mixcolumn(unsigned char state[4][4], unsigned char temp[4][4])
 
 void print(unsigned char print[4][4])
 {
+	int i,j,k;
   for(i=0;i<4;i++){
     for(j=0;j<4;j++){
       //  state[i][j]=state1[j][i];
