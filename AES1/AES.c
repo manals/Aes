@@ -47,21 +47,13 @@ void key_generate(unsigned char key[4][4], unsigned char expan_key[4][44])
         temp[index] = sbox[temp[index]];
       }
       //	printf("%#X  %#X  %#X  %#X  \n",temp[0],temp[1],temp[2],temp[3]);
+      index =0;
 
-      for(index = 0; index < 4; index++)
-      {
-        if(index == 0)
-        {
-          //printf("%#X",Rcon[rloop]);
           expan_key[index][i] = temp[index] ^ Rcon[rloop] ^ expan_key[index][i-4];
-        }
-        else
-        {
-          expan_key[index][i] = temp[index] ^ expan_key[index][i-4];
-        }
-        printf("\t");
-      }
-      printf("\n");
+          expan_key[index+1][i] = temp[index+1] ^ expan_key[index+1][i-4];
+          expan_key[index+2][i] = temp[index+2] ^ expan_key[index+2][i-4];
+		  expan_key[index+3][i] = temp[index+3] ^ expan_key[index+3][i-4];
+
       rloop++;
     }
     else
@@ -199,3 +191,4 @@ void print(unsigned char print[4][4])
   }
   printf("\n");
 }
+
