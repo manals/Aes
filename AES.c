@@ -6,12 +6,10 @@
 
  int i,j,k;
 
- unsigned char state[4][4] = {{0x32,0x88,0x31,0xE0},{0x43,0x5A,0x31,0x37},{0xF6,0x30,0x98,0x07},{0xa8,0x8D,0xA2,0x34}};
 
- unsigned char temp[4][4];
- unsigned char key[4][4]={{0x2B,0x28,0xAB,0x09},{0x7E,0xAE,0xF7,0xCF},{0x15,0xD2,0x15,0x4F},{0x16,0xA6,0x88,0x3C}};
- unsigned char expan_key[4][44];
- char tmp;
+
+
+
 
  static const char sbox[256] =   {
    //0     1    2      3     4    5     6     7      8    9     A      B    C     D     E     F
@@ -53,7 +51,16 @@
  static const char Rcon[10] = {
    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 };
 
- void key_generate()
+ void Add_key(unsigned char state[4][4],unsigned char temp_key[4][4])
+ {
+	 for(i=0;i<4;i++){
+	   for(j=0;j<4;j++){
+	 state[i][j]= state[i][j] ^ temp_key[i][j];
+	 }
+	 }
+ }
+
+ void key_generate(unsigned char key[4][4],unsigned char expan_key[4][44])
  {
 
    int rloop=0;
@@ -130,16 +137,23 @@
  }
 
 
- void subByte(uint8_t num)
+ void subByte(unsigned char state[4][4])
 {
 
+	 for(i=0;i<4;i++){
+	   for(j=0;j<4;j++){
 
-    state[i][j]=sbox[num];
+		   state[i][j]=sbox[state[i][j]];
+	   }
+	 }
+
+
 //	 printf("location value %#x ",Sb[num]);
 }
 
-void shiftRaw()
+void shiftRaw(unsigned char state[4][4])
 {
+	char tmp;
 	  tmp=state[1][3] ;
 	             state[1][3]=state[1][0];
 	             state[1][0]=state[1][1];
@@ -161,7 +175,7 @@ void shiftRaw()
 
 }
 
-void mixcolumn()
+void mixcolumn(unsigned char state[4][4], unsigned char temp[4][4])
 {
 
 
@@ -217,13 +231,28 @@ void mixcolumn()
 
 }
 
+void print(unsigned char print[4][4])
+{
+	for(i=0;i<4;i++){
+	  for(j=0;j<4;j++){
+		//  state[i][j]=state1[j][i];
+	 printf("%#X",print[i][j]);
+	 printf("\t");
+
+	}
+	printf("\n");
+	}
+   printf("\n");
+}
 
 int main ()
 {
 
 
-
-
+	unsigned char state[4][4] = {{0x32,0x88,0x31,0xE0},{0x43,0x5A,0x31,0x37},{0xF6,0x30,0x98,0x07},{0xa8,0x8D,0xA2,0x34}};
+	unsigned char key[4][4]={{0x2B,0x28,0xAB,0x09},{0x7E,0xAE,0xF7,0xCF},{0x15,0xD2,0x15,0x4F},{0x16,0xA6,0x88,0x3C}};
+	 unsigned char expan_key[4][44];
+	 unsigned char temp[4][4];
 //============1. Read user text into matrix=================
 
 
@@ -247,71 +276,43 @@ scanf("%s",*state);
    }
  }
 */
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
-	//  state[i][j]=state1[j][i];
- printf("%#X",state[i][j]);
- printf("\t");
 
-}
-printf("\n");
-}
-
+	 print(state);
 printf("\n KEY IN HEX \n");
 
 
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
- printf("%#X",key[i][j]);
- printf("\t");
-}
-printf("\n");
-}
+
+
+print(key);
+
 printf("\n");
 printf("\n");
-key_generate();
+key_generate(key,expan_key);
 
 printf("\n");
 printf("\n");
 //=================2. Add round key Correct ================
 
 
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
-state[i][j]= state[i][j] ^ key[i][j];
-}
-}
+
+Add_key(state,key);
 
 printf("\n AFTER ADDING ROUND KEY \n");
 
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
- printf("%#X",state[i][j]);
- printf("\t");
-}
-printf("\n");
-}
-printf("\n");
+print(state);
 
 int start=4;
 int loop;
+	unsigned char temp_key[4][4];
 //=================3. n round ================
 
 for(loop=1;loop<11;loop++)
 {
 	printf("\n State %d \n",loop);
-	for(i=0;i<4;i++){
-	  for(j=0;j<4;j++){
-		//  state[i][j]=state1[j][i];
-	 printf("%#X",state[i][j]);
-	 printf("\t");
 
-	}
-	printf("\n");
-	}
+	print(state);
 
 
-	char temp_key[4][4];
 
 
 	for(i=0;i<4;i++)
@@ -327,56 +328,35 @@ for(loop=1;loop<11;loop++)
 	printf("\n key %d \n",loop);
 
 
-	for(i=0;i<4;i++){
-	  for(j=0;j<4;j++){
-	 printf("%#X",temp_key[i][j]);
-	 printf("\t");
-	}
-   printf("\n");
-	}
-	printf("\n");
+	print(temp_key);
 //=================3.a. SubByte ================
 
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
 
-     subByte(state[i][j]);
-  }
-}
+     subByte(state);
 
 printf("\n AFTER SubByte\n");
 
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
- printf("%#X",state[i][j]);
- printf("\t");
-}
-printf("\n");
-}
+print(state);
+
 printf("\n");
 
 
 //=================3.b. Shift raw Correct ================
 
-shiftRaw();
+shiftRaw(state);
 
 
 printf("\n AFTER shift raw \n");
 
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
- printf("%#X",state[i][j]);
- printf("\t");
-}
-printf("\n");
-}
+print(state);
+
 printf("\n");
 
 
 //=================3.c. mix Column Correct ================
 if(loop!=10)
 {
-mixcolumn();
+mixcolumn(state,temp);
 
 printf("\n AFTER MIX COLUMN \n");
 
@@ -385,39 +365,35 @@ for(j=0;j<4;j++)
 		for (i=0;i<4;i++)
 			{
 			state[j][i]=temp[j][i];
-	    printf("%#X",temp[j][i]);
-	    printf("\t");
-			}
-		printf("\n");
-		};
+
+		}
+}
 }
 
+print(state);
 
 //=================3.d. Add round key ================
 
 
-for(i=0;i<4;i++){
+Add_key(state,temp_key);
+/*for(i=0;i<4;i++){
   for(j=0;j<4;j++){
 state[i][j]= state[i][j] ^ temp_key[i][j];
 }
 }
-
+*/
 
 printf("\n AFTER ADDING ROUND KEY %d\n",loop);
 
-for(i=0;i<4;i++){
-  for(j=0;j<4;j++){
- printf("%#X",state[i][j]);
- printf("\t");
-}
-printf("\n");
-}
+print(state);
+
 printf("\n");
 
 
 
 
 }
+
 	return 0;
 
 
