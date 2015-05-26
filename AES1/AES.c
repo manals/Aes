@@ -42,13 +42,12 @@ void key_generate(unsigned char key[4][4], unsigned char expan_key[4][44])
     {
 
       unsigned char temp[4] = {expan_key[1][i-1], expan_key[2][i-1], expan_key[3][i-1], expan_key[0][i-1]};
-      //	printf("%#X  %#X  %#X  %#X  \n",temp[0],temp[1],temp[2],temp[3]);
       int index;
       for(index = 0; index < 4; index++)
       {
         temp[index] = sbox[temp[index]];
       }
-      //	printf("%#X  %#X  %#X  %#X  \n",temp[0],temp[1],temp[2],temp[3]);
+
       index =0;
 
           expan_key[index][i] = temp[index] ^ Rcon[rloop] ^ expan_key[index][i-4];
@@ -97,7 +96,7 @@ void subByte(unsigned char state[4][4])
   }
 
 
-  //	 printf("location value %#x ",Sb[num]);
+
 }
 
 void shiftRaw(unsigned char state[4][4])
@@ -142,7 +141,7 @@ void mixcolumn(unsigned char state[4][4], unsigned char temp[4][4])
       temp[i][j]=0x00;
 
   unsigned  char tem=0x00;
-  // unsigned char tem1=0x00;
+
   for(j=0;j<4;j++)
   {
 
@@ -156,7 +155,7 @@ void mixcolumn(unsigned char state[4][4], unsigned char temp[4][4])
         {
           if (state[k][i]&0x80)
           {
-            //	printf("%#X jj ",state[k][i]);
+
             tem =(state[k][i]<<1)^0x1b ;
           }
           else
@@ -169,14 +168,11 @@ void mixcolumn(unsigned char state[4][4], unsigned char temp[4][4])
           else
             tem =((state[k][i]<<1)^state[k][i]);
         }
-        //   tem1 ^=(state[k][i]*coumn[j][k])%(0x11B);
+
         temp[j][i] = temp[j][i]^(tem);
-        //   printf("%#X  %#X ",state[k][i],coumn[j][k]);
-        // printf("%#X  ",tem);
-        // printf("\t");
+
       }
 
-      //printf("%#X  %#X\n",temp[j][i]);
     }
   }
 
@@ -188,7 +184,7 @@ void print(unsigned char print[4][4])
 	int i,j,k;
   for(i=0;i<4;i++){
     for(j=0;j<4;j++){
-      //  state[i][j]=state1[j][i];
+
       printf("%#X",print[i][j]);
       printf("\t");
 
