@@ -39,4 +39,9 @@ static const char rsbox[256] =
 static const char Rcon[10] = {
   0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36 };
 
-
+void Add_key(unsigned char state[4][4], unsigned char temp_key[4][4]);
+void key_generate(unsigned char key[4][4], unsigned char expan_key[4][44]);
+void subByte(unsigned char state[4][4]);
+void shiftRaw(unsigned char state[4][4]);
+void mixcolumn(unsigned char state[4][4], unsigned char temp[4][4]);
+void print(unsigned char print[4][4]);
