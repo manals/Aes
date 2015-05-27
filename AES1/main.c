@@ -21,7 +21,7 @@ int main ()
 	 unsigned char expan_key[4][44];
 	 unsigned char temp[4][4];
 //============1. Read user text into matrix=================
-//
+//===
 
 	 print(state);
 printf("\n KEY IN HEX \n");
